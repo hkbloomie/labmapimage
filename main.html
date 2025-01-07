@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Grid of Tables</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, auto);
+            grid-gap: 10px;
+            margin: 20px;
+        }
+
+        .table-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td {
+            border: 1px solid #999;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dynamic Grid of Tables</h1>
+    <div class="grid-container" id="grid-container">
+        <!-- Tables will be dynamically generated here -->
+    </div>
+
+    <div class="controls">
+        <label for="table-select">Select Table:</label>
+        <select id="table-select"></select>
+
+        <label for="cell-select">Select Cell:</label>
+        <select id="cell-select">
+            <option value="0">0,0</option>
+            <option value="1">0,1</option>
+            <option value="2">1,0</option>
+            <option value="3">1,1</option>
+        </select>
+
+        <label for="text-input">Enter Text:</label>
+        <input type="text" id="text-input">
+
+        <button onclick="updateCellText()">Update Cell</button>
+    </div>
+
+    <script>
+        const gridContainer = document.getElementById('grid-container');
+        const tableSelect = document.getElementById('table-select');
+
+        // Generate the 5x2 grid of 2x2 tables
+        for (let i = 0; i < 10; i++) {
+            const tableContainer = document.createElement('div');
+            tableContainer.className = 'table-container';
+
+            const table = document.createElement('table');
+            table.id = `table-${i}`;
+
+            for (let row = 0; row < 2; row++) {
+                const tr = document.createElement('tr');
+                for (let col = 0; col < 2; col++) {
+                    const td = document.createElement('td');
+                    td.id = `table-${i}-cell-${row}-${col}`;
+                    td.textContent = `${row},${col}`;
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+
+            tableContainer.appendChild(table);
+            gridContainer.appendChild(tableContainer);
+
+            // Add to table selection dropdown
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = `Table ${i + 1}`;
+            tableSelect.appendChild(option);
+        }
+
+        function updateCellText() {
+            const tableIndex = tableSelect.value;
+            const cellIndex = document.getElementById('cell-select').value;
+            const inputText = document.getElementById('text-input').value;
+
+            const cellRow = Math.floor(cellIndex / 2);
+            const cellCol = cellIndex % 2;
+            const cellId = `table-${tableIndex}-cell-${cellRow}-${cellCol}`;
+
+            const cell = document.getElementById(cellId);
+            if (cell) {
+                cell.textContent = inputText;
+            }
+        }
+    </script>
+</body>
+</html>
